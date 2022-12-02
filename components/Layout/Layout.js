@@ -37,7 +37,7 @@ export default function Layout({ user, children }) {
 
   return (
     <div>
-      <Navbar variant={"sticky"}>
+      <Navbar variant={"static"}>
         <Navbar.Brand>
           <Link href={"/"}>
             <Image

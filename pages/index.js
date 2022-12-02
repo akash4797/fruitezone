@@ -1,9 +1,15 @@
 import Head from "next/head";
-import React from "react";
+import React, { useEffect } from "react";
 import { NextAuthStore, pocketClient } from "../lib/pocketbase";
 import Layout from "../components/Layout/Layout";
+import { productFetch } from "../swr-fetcher/fetchers";
+import useSWR from "swr";
+import ProductCard from "../components/productCard/ProductCard";
 
 export default function Home({ user }) {
+  const { data, error } = useSWR("product", productFetch, { suspense: true });
+  if (error) return <div className="">An error occured</div>;
+  if (!data) return <div className="">Loading</div>;
   return (
     <div>
       <Head>
@@ -14,8 +20,19 @@ export default function Home({ user }) {
 
       <main>
         <Layout user={user}>
-          <div className="h-screen flex justify-center items-center">
-            <h1 className="text-6xl font-semibold">Fruite Zone</h1>
+          <div className="flex justify-center">
+            <div className="container">
+              <div className="py-4">
+                <h1 className="text-3xl font-semibold underline underline-offset-8">
+                  Products
+                </h1>
+                <div className="mt-5 flex flex-wrap gap-5">
+                  {data.map((item) => {
+                    return <ProductCard key={item.id} item={item} />;
+                  })}
+                </div>
+              </div>
+            </div>
           </div>
         </Layout>
       </main>
